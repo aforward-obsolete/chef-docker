@@ -39,3 +39,32 @@ else
     only_if { File.exists?("#{node[:docker][:ufw_path]}.orig") }
   end
 end
+
+directory "#{node[:docker][:src]}" do
+  recursive true
+end
+
+
+node[:docker][:installs].each do |name,giturl|
+
+  parent_dir = name.split("/")[0...-1].join("/")
+  unless parent_dir == ""
+    directory "#{node[:docker][:src]}/#{parent_dir}" do
+      recursive true
+    end
+  end
+
+  git "#{node[:docker][:src]}/#{name}" do
+    repository "#{giturl}"
+    reference "master"
+    depth 1
+    notifies :run, "execute[docker build #{name}]"
+  end
+
+  execute "docker build #{name}"  do
+    cwd "#{node[:docker][:src]}/#{name}"
+    command "docker build -t=\"#{name}\" ."
+    action :nothing
+  end
+
+end
