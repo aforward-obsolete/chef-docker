@@ -4,6 +4,7 @@ default[:docker][:enable_ufw] = true
 default[:docker][:ufw_path] = '/etc/default/ufw'
 default[:docker][:bin] = '/usr/bin/docker'
 
+default[:docker][:user] = 'deployer'
 
 default[:docker][:src] = '/etc/docker'
 

@@ -1,4 +1,10 @@
 
+group "docker" do
+  action :create
+  members "#{node[:docker][:user]}"
+  append true
+end
+
 [
   "apt-get update",
   "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9",
@@ -43,7 +49,6 @@ end
 directory "#{node[:docker][:src]}" do
   recursive true
 end
-
 
 node[:docker][:installs].each do |name,giturl|
 
